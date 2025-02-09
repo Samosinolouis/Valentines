@@ -8,27 +8,23 @@
     href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Poppins:wght@300;400;500;600&display=swap"
     rel="stylesheet"
   />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
-    /* Reset Styles */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    /* Variables */
     :root {
       --primary-color: #e53935;
       --text-color: #fff;
       --bg-color: #212121;
-      --button-color: #333;
-      --button-hover: #444;
       --font-base: 'Poppins', sans-serif;
       --font-decorative: 'Dancing Script', cursive;
     }
 
-    /* Basic Styling */
     body {
       display: flex;
       flex-direction: column;
@@ -40,34 +36,78 @@
       color: var(--text-color);
       text-align: center;
       padding: 20px;
+      overflow: hidden;
+      position: relative;
     }
 
-    /* Title */
+    .content {
+      opacity: 0;
+      filter: blur(8px);
+      transition: opacity 1s ease, filter 1s ease;
+    }
+    .content.active {
+      opacity: 1;
+      filter: blur(0);
+    }
+
     .title {
       font-size: 2rem;
       font-family: var(--font-decorative);
       margin-bottom: 15px;
     }
 
-    /* Slider Container */
     .slider-container {
+      position: relative;
       width: 85%;
       max-width: 400px;
       overflow: hidden;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-      position: relative;
       background: transparent;
       padding-bottom: 60px;
+      margin: auto;
     }
 
-    /* Image Slider */
+    .slider-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: auto;
+      height: auto;
+      background: rgba(0, 0, 0, 0.3);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 10;
+    }
+    .slider-nav.prev {
+      left: 10px;
+    }
+    .slider-nav.next {
+      right: 10px;
+    }
+    .slider-container:hover .slider-nav {
+      opacity: 1;
+      visibility: visible;
+    }
+    .slider-nav:hover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
     .slider {
       position: relative;
       width: 100%;
       aspect-ratio: 4 / 5;
       border-radius: 10px;
       overflow: hidden;
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-drag: element;
     }
 
     .slides {
@@ -81,37 +121,30 @@
       width: calc(100% / var(--slide-count));
       height: 100%;
       object-fit: cover;
+      pointer-events: none;
     }
 
-    /* Navigation Buttons */
-    .prev,
-    .next {
+    .dots-container {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(229, 57, 53, 0.8);
-      color: var(--text-color);
-      border: none;
-      padding: 10px;
-      cursor: pointer;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 5;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      font-size: 1rem;
-      z-index: 10;
+      background-color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .dot.active {
+      background-color: var(--primary-color);
     }
 
-    .prev {
-      left: 10px;
-    }
-    .next {
-      right: 10px;
-    }
-
-    .prev:hover,
-    .next:hover {
-      background: rgb(0, 0, 0);
-    }
-
-    /* 🎵 Music Controls (Below the Image) */
     .music-controls {
       display: flex;
       align-items: center;
@@ -122,9 +155,18 @@
       background: rgba(0, 0, 0, 0.1);
       padding: 15px 0;
       border-radius: 0 0 10px 10px;
+      z-index: 20;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .music-controls.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
     }
 
-    /* 🎚️ Volume Slider */
     #volume-slider {
       width: 80px;
       height: 5px;
@@ -133,15 +175,12 @@
       background: grey;
       border-radius: 5px;
       outline: none;
-      transition: 0.3s;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
-
     #volume-slider:hover {
       background: var(--primary-color);
       box-shadow: 0 0 8px var(--primary-color);
     }
-
-    /* Slider Thumb */
     #volume-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
@@ -150,15 +189,23 @@
       border-radius: 50%;
       background: white;
       cursor: pointer;
-      transition: 0.3s;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
-
-    #volume-slider::-webkit-slider-thumb:hover {
+    #volume-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      border: none;
+    }
+    #volume-slider::-webkit-slider-thumb:hover,
+    #volume-slider::-moz-range-thumb:hover {
       background: var(--primary-color);
       box-shadow: 0 0 5px var(--primary-color);
     }
 
-    /* Play/Pause Button */
     #music-btn {
       background: transparent;
       color: white;
@@ -171,75 +218,317 @@
       align-items: center;
       justify-content: center;
       margin-left: 10px;
-      transition: 0.3s;
+      transition: color 0.3s ease;
     }
-
     #music-btn:hover {
       color: var(--primary-color);
     }
-
-    /* Custom Play and Pause Icons */
     #music-btn::before {
       content: "►";
       font-size: 24px;
     }
-
     #music-btn.playing::before {
       content: "❚❚";
       font-size: 24px;
     }
+
+    .play-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      cursor: pointer;
+      transition: opacity 0.5s ease;
+    }
+    .play-overlay .play-btn {
+      font-size: 48px;
+      color: white;
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .floating-cute {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 15;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .floating-cute.active {
+      opacity: 1;
+    }
+    .floating-cute .cute {
+      position: absolute;
+      width: 60px;
+      animation: floatAnimation 4s ease-in-out infinite;
+    }
+    @keyframes floatAnimation {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(-15px) scale(1.1);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .decision-buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+    .decision-buttons button {
+      color: var(--text-color);
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .decision-buttons button:hover {
+      opacity: 0.8;
+    }
+    #yes-btn {
+      background-color: #e53935;
+    }
+    #no-btn {
+      background-color: #d32f2f;
+    }
+
+    @media screen and (max-width: 600px) {
+      .title {
+        font-size: 1.5rem;
+      }
+      .slider-container {
+        width: 90%;
+      }
+      #volume-slider {
+        width: 60px;
+      }
+      #music-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+      }
+    }
+
+    @media screen and (max-width: 400px) {
+      .title {
+        font-size: 1.3rem;
+      }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      color: #212121;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      position: relative;
+      text-align: center;
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
   </style>
+
 </head>
 <body>
-  <h1 class="title">Will you be my Valentine, Eunice? 💖</h1>
+  <div class="content" id="content">
+    <h1 class="title">Will you be my Valentine, Eunice? 💖</h1>
 
-  <!-- Background Music (Note: Removed the "muted" attribute) -->
-  <audio id="bg-music" autoplay loop>
+    <div class="slider-container">
+      <button class="slider-nav prev" onclick="changeSlide(-1)">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="slider-nav next" onclick="changeSlide(1)">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <div class="music-controls">
+        <input
+          type="range"
+          id="volume-slider"
+          min="0"
+          max="1"
+          step="0.05"
+          value="0.5"
+          oninput="changeVolume(this.value)"
+        />
+        <button id="music-btn" onclick="toggleMusic()"></button>
+      </div>
+
+      <div class="slider">
+        <div class="slides">
+          <img src="image1.jpg" alt="Image 1" />
+          <img src="image2.jpg" alt="Image 2" />
+          <img src="image3.jpg" alt="Image 3" />
+          <img src="image4.jpg" alt="Image 4" />
+          <img src="image5.jpg" alt="Image 5" />
+          <img src="image6.jpg" alt="Image 6" />
+          <img src="image7.jpg" alt="Image 7" />
+          <img src="image8.jpg" alt="Image 8" />
+        </div>
+        <div class="dots-container"></div>
+      </div>
+    </div>
+
+    <div class="decision-buttons">
+      <button id="yes-btn">Yes</button>
+      <button id="no-btn">No</button>
+    </div>
+  </div>
+
+  <div class="play-overlay" onclick="startExperience()">
+    <button class="play-btn">►</button>
+  </div>
+
+  <div class="floating-cute">
+    <img src="cute1.gif" alt="Cute Animation 1" class="cute" style="top: 10%; left: 5%; animation-delay: 0s;">
+    <img src="cute2.gif" alt="Cute Animation 2" class="cute" style="top: 78%; right: 10%; animation-delay: 1s;">
+    <img src="cute3.gif" alt="Cute Animation 3" class="cute" style="bottom: 20%; left: 12%; animation-delay: 2s;">
+    <img src="cute4.gif" alt="Cute Animation 4" class="cute" style="top: 30%; right: 10%; animation-delay: 0.5s;">
+    <img src="cute5.gif" alt="Cute Animation 5" class="cute" style="bottom: 10%; left: 50%; animation-delay: 1.5s;">
+    <img src="cute6.gif" alt="Cute Animation 6" class="cute" style="top: 10%; left: 68%; animation-delay: 2.5s;">
+  </div>
+
+  <audio id="bg-music" loop>
     <source src="music.mp3" type="audio/mpeg" />
     Your browser does not support the audio element.
   </audio>
 
-  <!-- Slider Container -->
-  <div class="slider-container">
-    <div class="slider">
-      <button class="prev" onclick="changeSlide(-1)">‹</button>
-      <div class="slides">
-        <img src="image1.jpg" alt="Love Image 1" />
-        <img src="image2.jpg" alt="Love Image 2" />
-        <img src="image3.jpg" alt="Love Image 3" />
-      </div>
-      <button class="next" onclick="changeSlide(1)">›</button>
-    </div>
-
-    <!-- 🎵 Music Controls (Below Image) -->
-    <div class="music-controls">
-      <input
-        type="range"
-        id="volume-slider"
-        min="0"
-        max="1"
-        step="0.05"
-        value="0.5"
-        oninput="changeVolume(this.value)"
-      />
-      <button id="music-btn" onclick="toggleMusic()"></button>
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="close-modal" class="close">×</span>
+      <div id="modal-body"></div>
     </div>
   </div>
 
   <script>
-    // Image Slider Functionality
     let slideIndex = 0;
     const slides = document.querySelector(".slides");
     const totalSlides = document.querySelectorAll(".slides img").length;
     document.documentElement.style.setProperty('--slide-count', totalSlides);
 
-    function changeSlide(direction) {
-      slideIndex = (slideIndex + direction + totalSlides) % totalSlides;
+    function updateSlider() {
       slides.style.transition = "transform 0.5s ease-in-out";
       slides.style.transform = `translateX(-${slideIndex * (100 / totalSlides)}%)`;
+      updateDots();
     }
 
-    // Music Control
+    function changeSlide(direction) {
+      slideIndex = (slideIndex + direction + totalSlides) % totalSlides;
+      updateSlider();
+    }
+
+    function updateDots() {
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === slideIndex);
+      });
+    }
+
+    const dotsContainer = document.querySelector('.dots-container');
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('span');
+      dot.classList.add('dot');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', function () {
+        slideIndex = i;
+        updateSlider();
+      });
+      dotsContainer.appendChild(dot);
+    }
+
+    let touchStartX = 0, touchEndX = 0;
+    let mouseStartX = 0, mouseEndX = 0, isDragging = false;
+    const sliderElement = document.querySelector('.slider');
+
+    sliderElement.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    sliderElement.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleGesture(touchStartX, touchEndX);
+    }, false);
+
+    sliderElement.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      mouseStartX = e.clientX;
+    }, false);
+
+    sliderElement.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+    });
+
+    sliderElement.addEventListener('mouseup', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      mouseEndX = e.clientX;
+      handleGesture(mouseStartX, mouseEndX);
+    }, false);
+
+    sliderElement.addEventListener('mouseleave', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      mouseEndX = e.clientX;
+      handleGesture(mouseStartX, mouseEndX);
+    }, false);
+
+    function handleGesture(startX, endX) {
+      const swipeThreshold = 50;
+      if (startX - endX > swipeThreshold) {
+        changeSlide(1);
+      } else if (endX - startX > swipeThreshold) {
+        changeSlide(-1);
+      }
+    }
+
     const audio = document.getElementById("bg-music");
     const musicBtn = document.getElementById("music-btn");
 
@@ -260,26 +549,53 @@
       audio.volume = value;
     }
 
-    // Attempt to play audio immediately on page load
-    document.addEventListener('DOMContentLoaded', function () {
-      audio.play().then(() => {
-        musicBtn.classList.add("playing");
-      }).catch(error => {
-        // Autoplay might be blocked by the browser.
-        console.error("Autoplay prevented:", error);
-        console.warn("Please click/tap the page to start the music.");
-      });
+    function startExperience() {
+      if (audio.paused) {
+        audio.play().then(() => {
+          musicBtn.classList.add("playing");
+        }).catch(error => {
+          console.error("Play error:", error);
+        });
+      }
+      document.getElementById("content").classList.add("active");
+      const overlay = document.querySelector('.play-overlay');
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.remove();
+        document.querySelector('.music-controls').classList.add('active');
+        document.querySelector('.floating-cute').classList.add('active');
+      }, 500);
+    }
+
+    function showModal(gifSrc, message) {
+      const modal = document.getElementById("modal");
+      const modalBody = document.getElementById("modal-body");
+      modalBody.innerHTML = `
+        <img src="${gifSrc}" alt="GIF" style="max-width: 100%; height: auto;">
+        <h2 style="margin-top: 20px; font-size: 2rem;">${message}</h2>
+      `;
+      modal.style.display = "block";
+    }
+
+    document.getElementById("close-modal").addEventListener("click", function() {
+      document.getElementById("modal").style.display = "none";
     });
 
-    // Fallback: If autoplay fails, play the audio on the first user interaction.
-    window.addEventListener("click", () => {
-      if (audio.paused) {
-        audio.play().catch(error => {
-          console.error("Manual play failed:", error);
-        });
-        musicBtn.classList.add("playing");
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById("modal");
+      if (event.target == modal) {
+        modal.style.display = "none";
       }
-    }, { once: true });
+    });
+
+    document.getElementById("yes-btn").addEventListener("click", function() {
+      showModal("yes.gif", "I love you!");
+    });
+
+    document.getElementById("no-btn").addEventListener("click", function() {
+      showModal("no.gif", ":<");
+    });
   </script>
+
 </body>
 </html>
