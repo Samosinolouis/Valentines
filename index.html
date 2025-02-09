@@ -54,6 +54,8 @@
       font-size: 2rem;
       font-family: var(--font-decorative);
       margin-bottom: 15px;
+      position: relative; /* For stacking context */
+      z-index: 20; /* Ensure title is above floating GIFs */
     }
 
     .slider-container {
@@ -294,6 +296,8 @@
       display: flex;
       gap: 15px;
       justify-content: center;
+      position: relative; /* For stacking context */
+      z-index: 20; /* Ensure buttons are above floating GIFs */
     }
     .decision-buttons button {
       color: var(--text-color);
@@ -314,6 +318,12 @@
       background-color: #d32f2f;
     }
 
+    @media screen and (max-width: 768px) { /* Tablet breakpoint */
+      .floating-cute .cute {
+        width: 50px; /* Smaller GIFs on tablet */
+      }
+    }
+
     @media screen and (max-width: 600px) {
       .title {
         font-size: 1.5rem;
@@ -329,11 +339,22 @@
         height: 35px;
         font-size: 18px;
       }
+      .floating-cute .cute {
+        width: 40px; /* Even smaller GIFs on mobile */
+      }
+      .decision-buttons {
+        flex-direction: column; /* Stack buttons on smaller screens */
+        align-items: center;
+        gap: 10px;
+      }
     }
 
     @media screen and (max-width: 400px) {
       .title {
         font-size: 1.3rem;
+      }
+      .floating-cute .cute {
+        width: 30px; /* Smallest GIFs on very small mobiles */
       }
     }
 
@@ -381,46 +402,47 @@
   <div class="content" id="content">
     <h1 class="title">Will you be my Valentine, Eunice? 💖</h1>
 
-    <div class="slider-container">
-      <button class="slider-nav prev" onclick="changeSlide(-1)">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      <button class="slider-nav next" onclick="changeSlide(1)">
-        <i class="fas fa-chevron-right"></i>
-      </button>
+<div class="slider-container">
+  <button class="slider-nav prev" onclick="changeSlide(-1)">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+  <button class="slider-nav next" onclick="changeSlide(1)">
+    <i class="fas fa-chevron-right"></i>
+  </button>
 
-      <div class="music-controls">
-        <input
-          type="range"
-          id="volume-slider"
-          min="0"
-          max="1"
-          step="0.05"
-          value="0.5"
-          oninput="changeVolume(this.value)"
-        />
-        <button id="music-btn" onclick="toggleMusic()"></button>
-      </div>
+  <div class="music-controls">
+    <input
+      type="range"
+      id="volume-slider"
+      min="0"
+      max="1"
+      step="0.05"
+      value="0.5"
+      oninput="changeVolume(this.value)"
+    />
+    <button id="music-btn" onclick="toggleMusic()"></button>
+  </div>
 
-      <div class="slider">
-        <div class="slides">
-          <img src="image1.jpg" alt="Image 1" />
-          <img src="image2.jpg" alt="Image 2" />
-          <img src="image3.jpg" alt="Image 3" />
-          <img src="image4.jpg" alt="Image 4" />
-          <img src="image5.jpg" alt="Image 5" />
-          <img src="image6.jpg" alt="Image 6" />
-          <img src="image7.jpg" alt="Image 7" />
-          <img src="image8.jpg" alt="Image 8" />
-        </div>
-        <div class="dots-container"></div>
-      </div>
+  <div class="slider">
+    <div class="slides">
+      <img src="image1.jpg" alt="Image 1" />
+      <img src="image2.jpg" alt="Image 2" />
+      <img src="image3.jpg" alt="Image 3" />
+      <img src="image4.jpg" alt="Image 4" />
+      <img src="image5.jpg" alt="Image 5" />
+      <img src="image6.jpg" alt="Image 6" />
+      <img src="image7.jpg" alt="Image 7" />
+      <img src="image8.jpg" alt="Image 8" />
     </div>
+    <div class="dots-container"></div>
+  </div>
+</div>
 
-    <div class="decision-buttons">
-      <button id="yes-btn">Yes</button>
-      <button id="no-btn">No</button>
-    </div>
+<div class="decision-buttons">
+  <button id="yes-btn">Yes</button>
+  <button id="no-btn">No</button>
+</div>
+
   </div>
 
   <div class="play-overlay" onclick="startExperience()">
