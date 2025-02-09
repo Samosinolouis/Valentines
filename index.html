@@ -4,21 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Will You Be My Valentine, Eunice? 💖</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Poppins:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
   <style>
-    /* Reset Styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    /* Variables */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --primary-color: #e53935;
       --text-color: #fff;
@@ -26,8 +15,6 @@
       --font-base: 'Poppins', sans-serif;
       --font-decorative: 'Dancing Script', cursive;
     }
-
-    /* Basic Styling */
     body {
       display: flex;
       flex-direction: column;
@@ -42,27 +29,20 @@
       overflow: hidden;
       position: relative;
     }
-
-    /* Content Wrapper (Title + Slider + Decision Buttons) starts blurred & hidden */
     .content {
       opacity: 0;
       filter: blur(8px);
       transition: opacity 1s ease, filter 1s ease;
     }
-    /* When activated, remove blur and fade in */
     .content.active {
       opacity: 1;
       filter: blur(0);
     }
-
-    /* Title */
     .title {
       font-size: 2rem;
       font-family: var(--font-decorative);
       margin-bottom: 15px;
     }
-
-    /* Slider Container */
     .slider-container {
       position: relative;
       width: 85%;
@@ -71,11 +51,9 @@
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
       background: transparent;
-      padding-bottom: 60px; /* Reserve space for music controls */
+      padding-bottom: 60px;
       margin: auto;
     }
-
-    /* Slider Navigation Arrows */
     .slider-nav {
       position: absolute;
       top: 50%;
@@ -93,12 +71,8 @@
       transition: opacity 0.3s ease, visibility 0.3s ease;
       z-index: 10;
     }
-    .slider-nav.prev {
-      left: 10px;
-    }
-    .slider-nav.next {
-      right: 10px;
-    }
+    .slider-nav.prev { left: 10px; }
+    .slider-nav.next { right: 10px; }
     .slider-container:hover .slider-nav {
       opacity: 1;
       visibility: visible;
@@ -106,8 +80,6 @@
     .slider-nav:hover {
       background: rgba(0, 0, 0, 0.5);
     }
-
-    /* Image Slider */
     .slider {
       position: relative;
       width: 100%;
@@ -118,22 +90,18 @@
       user-select: none;
       -webkit-user-drag: element;
     }
-
     .slides {
       display: flex;
       width: calc(100% * var(--slide-count));
       height: 100%;
       transition: transform 0.5s ease-in-out;
     }
-
     .slides img {
       width: calc(100% / var(--slide-count));
       height: 100%;
       object-fit: cover;
       pointer-events: none;
     }
-
-    /* Dot Navigation */
     .dots-container {
       position: absolute;
       bottom: 10px;
@@ -151,11 +119,7 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    .dot.active {
-      background-color: var(--primary-color);
-    }
-
-    /* Music Controls */
+    .dot.active { background-color: var(--primary-color); }
     .music-controls {
       display: flex;
       align-items: center;
@@ -177,8 +141,6 @@
       transform: translateY(0);
       pointer-events: auto;
     }
-
-    /* Volume Slider */
     #volume-slider {
       width: 80px;
       height: 5px;
@@ -217,8 +179,6 @@
       background: var(--primary-color);
       box-shadow: 0 0 5px var(--primary-color);
     }
-
-    /* Play/Pause Button */
     #music-btn {
       background: transparent;
       color: white;
@@ -233,9 +193,7 @@
       margin-left: 10px;
       transition: color 0.3s ease;
     }
-    #music-btn:hover {
-      color: var(--primary-color);
-    }
+    #music-btn:hover { color: var(--primary-color); }
     #music-btn::before {
       content: "►";
       font-size: 24px;
@@ -244,8 +202,6 @@
       content: "❚❚";
       font-size: 24px;
     }
-
-    /* Play Overlay */
     .play-overlay {
       position: fixed;
       top: 0;
@@ -268,8 +224,6 @@
       outline: none;
       cursor: pointer;
     }
-
-    /* Floating Cute Images Container */
     .floating-cute {
       position: fixed;
       top: 0;
@@ -281,30 +235,17 @@
       opacity: 0;
       transition: opacity 1s ease;
     }
-    .floating-cute.active {
-      opacity: 1;
-    }
+    .floating-cute.active { opacity: 1; }
     .floating-cute .cute {
       position: absolute;
       width: 60px;
       animation: floatAnimation 4s ease-in-out infinite;
     }
     @keyframes floatAnimation {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: translateY(-15px) scale(1.1);
-        opacity: 0.8;
-      }
-      100% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      50% { transform: translateY(-15px) scale(1.1); opacity: 0.8; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
     }
-
-    /* Decision Buttons */
     .decision-buttons {
       margin-top: 20px;
       display: flex;
@@ -320,44 +261,20 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    .decision-buttons button:hover {
-      opacity: 0.8;
-    }
-    /* Specific Button Colors */
-    #yes-btn {
-      background-color: #e53935; /* red */
-    }
-    #no-btn {
-      background-color: #d32f2f; /* a slightly different red */
-    }
-
-    /* Responsive Adjustments for Mobile */
+    .decision-buttons button:hover { opacity: 0.8; }
+    #yes-btn { background-color: #e53935; }
+    #no-btn { background-color: #d32f2f; }
     @media screen and (max-width: 600px) {
-      .title {
-        font-size: 1.5rem;
-      }
-      .slider-container {
-        width: 90%;
-      }
-      #volume-slider {
-        width: 60px;
-      }
-      #music-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 18px;
-      }
+      .title { font-size: 1.5rem; }
+      .slider-container { width: 90%; }
+      #volume-slider { width: 60px; }
+      #music-btn { width: 35px; height: 35px; font-size: 18px; }
     }
-
     @media screen and (max-width: 400px) {
-      .title {
-        font-size: 1.3rem;
-      }
+      .title { font-size: 1.3rem; }
     }
-
-    /* Modal Popup Styles */
     .modal {
-      display: none; /* Hidden by default */
+      display: none;
       position: fixed;
       z-index: 2000;
       left: 0;
@@ -369,7 +286,7 @@
     }
     .modal-content {
       background-color: #fefefe;
-      color: #212121; /* Dark text so the message is visible */
+      color: #212121;
       margin: 10% auto;
       padding: 20px;
       border: 1px solid #888;
@@ -393,7 +310,6 @@
       text-decoration: none;
       cursor: pointer;
     }
-    /* Responsive Modal Adjustments */
     @media screen and (max-width: 600px) {
       .modal-content {
         width: 90%;
@@ -401,46 +317,24 @@
         max-height: 80vh;
         overflow-y: auto;
       }
-      .modal-content h2 {
-        font-size: 1.5rem;
-      }
+      .modal-content h2 { font-size: 1.5rem; }
       .modal-content img {
         max-height: 40vh;
         object-fit: contain;
       }
     }
   </style>
-
 </head>
 <body>
-  <!-- Content Wrapper (Title + Slider + Decision Buttons) -->
   <div class="content" id="content">
     <h1 class="title">Will you be my Valentine, Eunice? 💖</h1>
-
-    <!-- Slider Container -->
     <div class="slider-container">
-      <!-- Slider navigation buttons -->
-      <button class="slider-nav prev" onclick="changeSlide(-1)">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      <button class="slider-nav next" onclick="changeSlide(1)">
-        <i class="fas fa-chevron-right"></i>
-      </button>
-
-      <!-- Music Controls -->
+      <button class="slider-nav prev" onclick="changeSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+      <button class="slider-nav next" onclick="changeSlide(1)"><i class="fas fa-chevron-right"></i></button>
       <div class="music-controls">
-        <input
-          type="range"
-          id="volume-slider"
-          min="0"
-          max="1"
-          step="0.05"
-          value="0.5"
-          oninput="changeVolume(this.value)"
-        />
+        <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.5" oninput="changeVolume(this.value)" />
         <button id="music-btn" onclick="toggleMusic()"></button>
       </div>
-
       <div class="slider">
         <div class="slides">
           <img src="image1.jpg" alt="Image 1" />
@@ -455,67 +349,51 @@
         <div class="dots-container"></div>
       </div>
     </div>
-
-    <!-- Decision Buttons -->
     <div class="decision-buttons">
       <button id="yes-btn">Yes</button>
       <button id="no-btn">No</button>
     </div>
   </div>
-
-  <!-- Play Overlay -->
   <div class="play-overlay" onclick="startExperience()">
     <button class="play-btn">►</button>
   </div>
-
-  <!-- Floating Cute Images -->
   <div class="floating-cute">
     <img src="cute1.gif" alt="Cute Animation 1" class="cute" style="top: 5%; left: 5%; animation-delay: 0s;">
-    <img src="cute2.gif" alt="Cute Animation 2" class="cute" style="top: 50%; right: 10%; animation-delay: 1s;">
+    <img src="cute2.gif" alt="Cute Animation 2" class="cute" style="top: 30%; right: 10%; animation-delay: 1s;">
     <img src="cute4.gif" alt="Cute Animation 4" class="cute" style="bottom: 10%; right: 14%; animation-delay: 0.5s;">
     <img src="cute5.gif" alt="Cute Animation 5" class="cute" style="bottom: 10%; left: 10%; animation-delay: 1.5s;">
     <img src="cute6.gif" alt="Cute Animation 6" class="cute" style="top: 3%; left: 68%; animation-delay: 2.5s;">
   </div>
-
-  <!-- Background Music -->
   <audio id="bg-music" loop>
     <source src="music.mp3" type="audio/mpeg" />
     Your browser does not support the audio element.
   </audio>
-
-  <!-- Modal Popup -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span id="close-modal" class="close">&times;</span>
       <div id="modal-body"></div>
     </div>
   </div>
-
   <script>
-    // Image Slider Functionality
     let slideIndex = 0;
     const slides = document.querySelector(".slides");
     const totalSlides = document.querySelectorAll(".slides img").length;
     document.documentElement.style.setProperty('--slide-count', totalSlides);
-
     function updateSlider() {
       slides.style.transition = "transform 0.5s ease-in-out";
       slides.style.transform = `translateX(-${slideIndex * (100 / totalSlides)}%)`;
       updateDots();
     }
-
     function changeSlide(direction) {
       slideIndex = (slideIndex + direction + totalSlides) % totalSlides;
       updateSlider();
     }
-
     function updateDots() {
       const dots = document.querySelectorAll('.dot');
       dots.forEach((dot, index) => {
         dot.classList.toggle('active', index === slideIndex);
       });
     }
-
     const dotsContainer = document.querySelector('.dots-container');
     for (let i = 0; i < totalSlides; i++) {
       const dot = document.createElement('span');
@@ -527,44 +405,35 @@
       });
       dotsContainer.appendChild(dot);
     }
-
-    // Touch/Swipe Functionality
     let touchStartX = 0, touchEndX = 0;
     let mouseStartX = 0, mouseEndX = 0, isDragging = false;
     const sliderElement = document.querySelector('.slider');
-
     sliderElement.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
     }, false);
-
     sliderElement.addEventListener('touchend', (e) => {
       touchEndX = e.changedTouches[0].screenX;
       handleGesture(touchStartX, touchEndX);
     }, false);
-
     sliderElement.addEventListener('mousedown', (e) => {
       isDragging = true;
       mouseStartX = e.clientX;
     }, false);
-
     sliderElement.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
     });
-
     sliderElement.addEventListener('mouseup', (e) => {
       if (!isDragging) return;
       isDragging = false;
       mouseEndX = e.clientX;
       handleGesture(mouseStartX, mouseEndX);
     }, false);
-
     sliderElement.addEventListener('mouseleave', (e) => {
       if (!isDragging) return;
       isDragging = false;
       mouseEndX = e.clientX;
       handleGesture(mouseStartX, mouseEndX);
     }, false);
-
     function handleGesture(startX, endX) {
       const swipeThreshold = 50;
       if (startX - endX > swipeThreshold) {
@@ -573,11 +442,8 @@
         changeSlide(-1);
       }
     }
-
-    // Music Control
     const audio = document.getElementById("bg-music");
     const musicBtn = document.getElementById("music-btn");
-
     function toggleMusic() {
       if (audio.paused) {
         audio.play().then(() => {
@@ -590,12 +456,9 @@
         musicBtn.classList.remove("playing");
       }
     }
-
     function changeVolume(value) {
       audio.volume = value;
     }
-
-    // Start Experience: Called when the play overlay is clicked.
     function startExperience() {
       if (audio.paused) {
         audio.play().then(() => {
@@ -613,9 +476,6 @@
         document.querySelector('.floating-cute').classList.add('active');
       }, 500);
     }
-
-    // Modal Popup Functionality
-    // The modal now shows the text/message above the GIF.
     function showModal(gifSrc, message) {
       const modal = document.getElementById("modal");
       const modalBody = document.getElementById("modal-body");
@@ -625,27 +485,21 @@
       `;
       modal.style.display = "block";
     }
-
     document.getElementById("close-modal").addEventListener("click", function() {
       document.getElementById("modal").style.display = "none";
     });
-
     window.addEventListener('click', function(event) {
       const modal = document.getElementById("modal");
       if (event.target == modal) {
         modal.style.display = "none";
       }
     });
-
-    // Decision Buttons: Show modal popup with text above and GIF below when clicked.
     document.getElementById("yes-btn").addEventListener("click", function() {
-      showModal("yes.gif", "I love you!");
+      showModal("yes.gif", "😏");
     });
-
     document.getElementById("no-btn").addEventListener("click", function() {
-      showModal("no.gif", ":<");
+      showModal("no.gif", "😓");
     });
   </script>
-
 </body>
 </html>
