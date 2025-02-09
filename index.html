@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine, Eunice? 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Reset Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Variables */
+        :root {
+            --primary-color: #e53935;
+            --text-color: #fff;
+            --bg-color: #212121;
+            --button-color: #333;
+            --button-hover: #444;
+            --font-base: 'Poppins', sans-serif;
+            --font-decorative: 'Dancing Script', cursive;
+        }
+
+        /* Basic Styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--bg-color);
+            font-family: var(--font-base);
+            color: var(--text-color);
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Title */
+        .title {
+            font-size: 2rem;
+            font-family: var(--font-decorative);
+            margin-bottom: 15px;
+        }
+
+        /* Slider Container */
+        .slider-container {
+            width: 85%;
+            max-width: 400px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            position: relative;
+            background: transparent;
+            padding-bottom: 60px;
+        }
+
+        /* Image Slider */
+        .slider {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: flex;
+            width: calc(100% * var(--slide-count));
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slides img {
+            width: calc(100% / var(--slide-count));
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Navigation Buttons */
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(229, 57, 53, 0.8);
+            color: var(--text-color);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 1rem;
+            z-index: 10;
+        }
+
+        .prev { left: 10px; }
+        .next { right: 10px; }
+
+        .prev:hover, .next:hover {
+            background: rgb(0, 0, 0);
+        }
+
+        /* 🎵 Music Controls (Below the Image) */
+        .music-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* 🎚️ Volume Slider */
+        #volume-slider {
+            width: 80px;
+            height: 5px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: grey;
+            border-radius: 5px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        #volume-slider:hover {
+            background: var(--primary-color);
+            box-shadow: 0 0 8px var(--primary-color);
+        }
+
+        /* Slider Thumb */
+        #volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #volume-slider::-webkit-slider-thumb:hover {
+            background: var(--primary-color);
+            box-shadow: 0 0 5px var(--primary-color);
+        }
+
+        /* Play/Pause Button */
+        #music-btn {
+            background: transparent;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            transition: 0.3s;
+        }
+
+        #music-btn:hover {
+            color: var(--primary-color);
+        }
+
+        /* Custom Play and Pause Icons */
+        #music-btn::before {
+            content: "►";
+            font-size: 24px;
+        }
+
+        #music-btn.playing::before {
+            content: "❚❚";
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="title">Will you be my Valentine, Eunice? 💖</h1>
+
+    <!-- Background Music -->
+    <audio id="bg-music" autoplay loop muted>
+        <source src="music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Slider Container -->
+    <div class="slider-container">
+        <div class="slider">
+            <button class="prev" onclick="changeSlide(-1)">‹</button>
+            <div class="slides">
+                <img src="image1.jpg" alt="Love Image 1">
+                <img src="image2.jpg" alt="Love Image 2">
+                <img src="image3.jpg" alt="Love Image 3">
+            </div>
+            <button class="next" onclick="changeSlide(1)">›</button>
+        </div>
+
+        <!-- 🎵 Music Controls (Below Image) -->
+        <div class="music-controls">
+            <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.5" oninput="changeVolume(this.value)">
+            <button id="music-btn" onclick="toggleMusic()"></button>
+        </div>
+    </div>
+
+    <script>
+        let slideIndex = 0;
+        const slides = document.querySelector(".slides");
+        const totalSlides = document.querySelectorAll(".slides img").length;
+
+        document.documentElement.style.setProperty('--slide-count', totalSlides);
+
+        function changeSlide(direction) {
+            slideIndex = (slideIndex + direction + totalSlides) % totalSlides;
+            slides.style.transition = "transform 0.5s ease-in-out";
+            slides.style.transform = `translateX(-${slideIndex * (100 / totalSlides)}%)`;
+        }
+
+        // 🎵 Music Control
+        let audio = document.getElementById("bg-music");
+        let musicBtn = document.getElementById("music-btn");
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                musicBtn.classList.add("playing");
+            } else {
+                audio.pause();
+                musicBtn.classList.remove("playing");
+            }
+        }
+
+        function changeVolume(value) {
+            audio.volume = value;
+        }
+
+        // Attempt to play audio immediately on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            audio.muted = false; // Unmute immediately
+            audio.play().catch(error => {
+                // Autoplay was prevented. Show a message or fallback.
+                console.error("Autoplay prevented:", error);
+                console.warn("Click/tap the page to play audio."); // Optional: Inform user
+            });
+            musicBtn.classList.add("playing"); // Set icon to 'playing' state
+        });
+
+        // Fallback: Unmute & Start Music After First Click (if autoplay fails) - Keep this for user interaction
+        window.addEventListener("click", () => {
+            if (audio.muted) { // Only unmute if it's still muted (autoplay might have succeeded)
+                audio.muted = false;
+                audio.play().catch(error => {
+                    console.error("Manual play failed:", error);
+                });
+                musicBtn.classList.add("playing");
+            }
+        }, { once: true }); // Only listen for the first click
+    </script>
+
+</body>
+</html>
